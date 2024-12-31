@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.shopping.mapper.BorrowRecordMapper">
+    <!-- 归还图书记录 -->
+    <update id="returnBorrowedBook">
+        UPDATE borrowrecord
+        SET return_date = NOW()
+        WHERE id = #{borrowRecordId} AND return_date IS NULL;
+    </update>
+    <!-- 更新借阅图书记录 -->
+    <update id="updateBorrowRecord" parameterType="com.example.shopping.pojo.BorrowRecord">
+        UPDATE borrowrecord
+        <set>
+            <if test="bookId != null">
+                book_id = #{bookId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="borrowDate != null">
+                borrow_date = #{borrowDate},
+            </if>
+            <if test="returnDate != null">
+                return_date = #{returnDate},
+            </if>
+        </set>
+        WHERE id = #{id};
+    </update>
+
+
+    <!-- 删除借阅记录 -->
+    <delete id="deleteBorrowRecord">
+        DELETE FROM borrowrecord
+        WHERE id = #{borrowRecordId};
+    </delete>
+
+
+    <insert id="addBorrowRecord" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO borrowrecord (book_id, user_id, borrow_date)
+        VALUES (#{bookId}, #{userId}, NOW());
+    </insert>
+    <!-- 查询所有借阅记录，只查询用户ID和图书ID -->
+    <select id="findAllBorrowedBooks" resultMap="BorrowRecordMap">
+        SELECT
+            br.id AS borrowId,
+            br.user_id AS userId,
+            br.book_id AS bookId,
+            br.borrow_date AS borrowDate,
+            br.return_date AS returnDate
+        FROM
+            borrowrecord br
+    </select>
+
+    <select id="findBorrowedBooksByUserId" resultType="com.example.shopping.pojo.Book">
+        SELECT
+            b.id AS id,
+            b.title AS title,
+            a.name AS author,  -- 连接作者表获取名称
+            c.name AS category,  -- 连接分类表获取名称
+            b.published_year AS publishedYear
+        FROM
+            borrowrecord br
+                LEFT JOIN book b ON br.book_id = b.id
+                LEFT JOIN author a ON b.author_id = a.id
+                LEFT JOIN category c ON b.category_id = c.id
+        WHERE
+            br.user_id = #{userId};
+    </select>
+    <!-- 查询借阅了指定图书的用户 -->
+    <select id="getUsersByBorrowedBook" resultType="com.example.shopping.pojo.User">
+        SELECT
+        u.id,
+        u.username,
+        u.email,
+        u.avatar_path AS avatarPath,
+        u.role
+        FROM
+        user u
+        JOIN borrowrecord br ON u.id = br.user_id  <!-- 连接借阅记录表 -->
+        WHERE
+        br.book_id = #{bookId}  <!-- 根据传入的 bookId 查询 -->
+    </select>
+
+    <select id="findUserBorrowedBooksCount" resultType="com.example.shopping.pojo.UserBorrowedBooksCount">
+        SELECT
+            u.id AS userId,
+            u.username AS userName,
+            COUNT(br.book_id) AS borrowedBooksCount
+        FROM
+            borrowrecord br
+                JOIN
+            user u ON br.user_id = u.id
+        GROUP BY
+            br.user_id;
+    </select>
+    <select id="findUserBorrowedBooksCountByUserId" resultType="com.example.shopping.pojo.UserBorrowedBooksCount">
+        SELECT
+            u.id AS userId,
+            u.username AS userName,
+            COUNT(br.book_id) AS borrowedBooksCount
+        FROM
+            borrowrecord br
+                JOIN
+            user u ON br.user_id = u.id
+        WHERE
+            u.id = #{userId}
+        GROUP BY
+            br.user_id;
+    </select>
+
+    <!-- 查询某个作者的所有图书借阅记录 -->
+    <select id="findBooksBorrowedByAuthor" resultMap="BorrowRecordMap">
+        SELECT
+            br.id AS borrowId,
+            br.user_id AS userId,
+            br.book_id AS bookId,
+            br.borrow_date AS borrowDate,
+            br.return_date AS returnDate
+        FROM
+            book b
+                LEFT JOIN
+            borrowrecord br ON b.id = br.book_id
+                LEFT JOIN
+            user u ON br.user_id = u.id
+        WHERE
+            b.author_id = #{authorId};
+    </select>
+
+
+    <!-- ResultMap 映射 -->
+    <resultMap id="BorrowRecordMap" type="com.example.shopping.pojo.BorrowRecord">
+        <id property="id" column="borrowId" />
+        <result property="userId" column="userId" />
+        <result property="bookId" column="bookId" />
+        <result property="borrowDate" column="borrowDate" />
+        <result property="returnDate" column="returnDate" />
+    </resultMap>
+</mapper>

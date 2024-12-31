@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.shopping.mapper.BookMapper">
+    <insert id="addBook" parameterType="com.example.shopping.pojo.BookDTO">
+        INSERT INTO book (title, author_id, category_id, published_year)
+        VALUES (#{title}, #{authorId}, #{categoryId}, #{publishedYear})
+    </insert>
+
+    <update id="updateBook" parameterType="com.example.shopping.pojo.BookDTO">
+        UPDATE book
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="authorId != null">
+                author_id = #{authorId},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="publishedYear != null">
+                published_year = #{publishedYear},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBook" parameterType="Integer">
+        DELETE FROM book WHERE id = #{id}
+    </delete>
+
+
+    <select id="findAllBooksWithAuthors" resultType="com.example.shopping.pojo.Book">
+        SELECT
+        b.id AS id,
+        b.title AS title,
+        a.name AS author,  <!-- 显示作者的名字 -->
+        c.name AS category,  <!-- 显示分类的名称 -->
+        b.published_year AS publishedYear  <!-- 显示出版年份 -->
+        FROM
+        book b
+        JOIN author a ON b.author_id = a.id  <!-- 使用b.author_id与a.id连接 -->
+        JOIN category c ON b.category_id = c.id  <!-- 使用b.category_id与c.id连接 -->
+    </select>
+    <select id="findBookById" resultType="com.example.shopping.pojo.Book">
+        SELECT
+        b.id AS id,
+        b.title AS title,
+        a.name AS author,  <!-- 显示作者的名字 -->
+        c.name AS category,  <!-- 显示分类的名称 -->
+        b.published_year AS publishedYear  <!-- 显示出版年份 -->
+        FROM
+        book b
+        JOIN author a ON b.author_id = a.id  <!-- 使用b.author_id与a.id连接 -->
+        JOIN category c ON b.category_id = c.id  <!-- 使用b.category_id与c.id连接 -->
+        WHERE
+            b.id = #{id}
+    </select>
+    <!-- 查询某一分类下的所有图书 -->
+    <select id="findBooksByCategoryId" resultType="com.example.shopping.pojo.Book">
+        SELECT
+            b.id AS id,
+            b.title AS title,
+            a.name AS author,  -- 获取作者名称
+            c.name AS category,  -- 获取分类名称
+            b.published_year AS publishedYear
+        FROM
+            book b
+                LEFT JOIN author a ON b.author_id = a.id
+                LEFT JOIN category c ON b.category_id = c.id
+        WHERE
+            b.category_id = #{categoryId};
+    </select>
+    <!-- 查询同一作者的所有图书 -->
+    <select id="findBooksByAuthorId" resultType="com.example.shopping.pojo.Book">
+        SELECT
+            b.id,
+            b.title,
+            b.author_id AS authorId,
+            a.name AS author,  -- 获取作者姓名
+            b.category_id AS categoryId,
+            c.name AS category,  -- 获取分类名称
+            b.published_year AS publishedYear
+        FROM
+            book b
+                LEFT JOIN
+            author a ON b.author_id = a.id  -- 连接查询作者表
+                LEFT JOIN
+            category c ON b.category_id = c.id  -- 连接查询分类表
+        WHERE
+            b.author_id = #{authorId};
+    </select>
+
+</mapper>
