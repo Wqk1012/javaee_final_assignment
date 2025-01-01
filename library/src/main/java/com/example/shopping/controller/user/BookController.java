@@ -1,12 +1,15 @@
 package com.example.shopping.controller.user;
 
 import com.example.shopping.mapper.CategoryMapper;
+import com.example.shopping.pojo.Author;
 import com.example.shopping.pojo.Book;
 import com.example.shopping.pojo.Category;
 import com.example.shopping.pojo.Result;
+import com.example.shopping.service.AuthorService;
 import com.example.shopping.service.BookService;
 import com.example.shopping.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +24,9 @@ public class BookController {
     private BookService bookService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private AuthorService authorService;
+
 
     @Operation(summary = "获取全部图书")
     @GetMapping("/allBook")
@@ -51,4 +57,19 @@ public class BookController {
         }
         return Result.success(booksByCategoryId);
     }
+
+    @Operation(summary = "通过作者查询图书详细信息列表")
+    @GetMapping("/findBooksByAuthorId")
+    public Result<List<Book>> findBooksByAuthorId(Integer authorId){
+        Author author = authorService.getAuthorById(authorId);
+        if (author == null){
+            return Result.error("此作者不存在");
+        }
+        List<Book> books = bookService.findBooksByAuthorId(authorId);
+        if (books.isEmpty()){
+            return Result.error("此作者暂无图书");
+        }
+        return Result.success(books);
+    }
+
 }
