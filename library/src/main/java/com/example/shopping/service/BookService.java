@@ -22,4 +22,6 @@ public interface BookService {
     Integer updateBook(BookDTO bookDTO);//修改图书
 
     Integer deleteBook(Integer id);//删除图书
+
+    BookDTO getBookByTitle(String title); // 根据书名查询图书
 }

@@ -26,4 +26,19 @@ public class AuthorServiceImpl implements AuthorService {
     public Author getAuthorByName(String name) {
         return authorMapper.getAuthorByName(name);
     }
+
+    @Override
+    public Integer insertAuthor(Author author) {
+        return authorMapper.insertAuthor(author);
+    }
+
+    @Override
+    public Integer deleteAuthorById(Integer id) {
+        return authorMapper.deleteAuthorById(id);
+    }
+
+    @Override
+    public Integer updateAuthor(Author author) {
+        return authorMapper.updateAuthor(author);
+    }
 }

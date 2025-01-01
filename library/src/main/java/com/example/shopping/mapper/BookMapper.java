@@ -25,4 +25,6 @@ public interface BookMapper {
 
     Integer deleteBook(Integer id);//删除图书
 
+    BookDTO getBookByTitle(String title); // 根据书名查询图书
+
 }

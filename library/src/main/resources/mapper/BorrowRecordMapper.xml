@@ -38,9 +38,9 @@
     </delete>
 
 
-    <insert id="addBorrowRecord" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+    <insert id="addBorrowRecord" parameterType="map" useGeneratedKeys="true" keyProperty="params.id">
         INSERT INTO borrowrecord (book_id, user_id, borrow_date)
-        VALUES (#{bookId}, #{userId}, NOW());
+        VALUES (#{params.bookId}, #{params.userId}, NOW())
     </insert>
     <!-- 查询所有借阅记录，只查询用户ID和图书ID -->
     <select id="findAllBorrowedBooks" resultMap="BorrowRecordMap">
@@ -52,6 +52,18 @@
             br.return_date AS returnDate
         FROM
             borrowrecord br
+    </select>
+
+    <!-- 查询单个借阅记录 -->
+    <select id="findBorrowRecordById" parameterType="int" resultType="com.example.shopping.pojo.BorrowRecord">
+        SELECT
+            id,
+            user_id AS userId,
+            book_id AS bookId,
+            borrow_date AS borrowDate,
+            return_date AS returnDate
+        FROM borrowrecord
+        WHERE id = #{borrowRecordId}
     </select>
 
     <select id="findBorrowedBooksByUserId" resultType="com.example.shopping.pojo.Book">

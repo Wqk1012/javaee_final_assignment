@@ -93,5 +93,11 @@
         WHERE
             b.author_id = #{authorId};
     </select>
+    <!-- 根据书名查询图书 -->
+    <select id="getBookByTitle" parameterType="string" resultType="com.example.shopping.pojo.BookDTO">
+        SELECT id, title, author_id AS authorId, category_id AS categoryId, published_year AS publishedYear
+        FROM book
+        WHERE title = #{title}
+    </select>
 
 </mapper>

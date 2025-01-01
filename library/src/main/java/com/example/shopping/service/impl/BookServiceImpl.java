@@ -47,4 +47,9 @@ public class BookServiceImpl implements BookService {
     public Integer deleteBook(Integer id) {
         return bookMapper.deleteBook(id);
     }
+
+    @Override
+    public BookDTO getBookByTitle(String title) {
+        return bookMapper.getBookByTitle(title);
+    }
 }

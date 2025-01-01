@@ -57,7 +57,7 @@ class ShoppingApplicationTests {
     private BookMapper bookMapper;
     @Test
     public void testbook(){
-
+        System.out.println(bookMapper.getBookByTitle("活着"));
     }
 
     @Autowired
