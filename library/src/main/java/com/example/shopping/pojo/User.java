@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ public class User implements Serializable {
     private Integer id;
 
     @NotBlank(message = "用户名不能为空")
+    @Size(min = 4,max = 20,message = "用户名长度为4~20个字符")
     @Schema(description = "用户名，用户登录使用的名称", example = "张三")
     private String username;
 
