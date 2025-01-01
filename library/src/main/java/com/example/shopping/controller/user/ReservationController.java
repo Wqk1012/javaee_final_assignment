@@ -48,7 +48,7 @@ public class ReservationController {
     @GetMapping("/getAll")
     @Operation(summary = "查询所有预约记录")
     public Result<List<Reservation>> getAll(){
-        //获取用户id
+        //通过JWT获取用户ID
         String token = ThreadLocalUtil.get();
         Integer userID = JwtUtil.getIdFromToken(token);
         List<Reservation> reservationsByUserId = reservationService.findReservationsByUserId(userID);

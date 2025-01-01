@@ -9,6 +9,7 @@ import com.example.shopping.service.AuthorService;
 import com.example.shopping.service.BookService;
 import com.example.shopping.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user/book")
+@Tag(name = "图书管理", description = "提供图书管理相关操作的API")
 public class BookController {
     @Autowired
     private BookService bookService;
@@ -47,11 +49,13 @@ public class BookController {
     @Operation(summary = "通过分类查询图书详细信息列表")
     @GetMapping("/findBookByCategoryId")
     public Result<List<Book>> findBooksByCategoryId(Integer categoryId){
+        //判断分类是否存在
         Category category = categoryService.getCategoryById(categoryId);
         if (category == null){
             return Result.error("此分类不存在");
         }
         List<Book> booksByCategoryId = bookService.findBooksByCategoryId(categoryId);
+        //判断返回值是否为空
         if (booksByCategoryId .isEmpty()){
             return Result.error("此分类下暂无图书");
         }

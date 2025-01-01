@@ -16,7 +16,7 @@ public class Result<T> implements Serializable{
     private Integer code;//业务状态码  0-成功  1-失败
     @Schema(description = "提示信息", example = "操作成功")
     private String message;//提示信息
-    @Schema(description = "响应数据", example = "user对象")
+    @Schema(description = "响应数据", example = "实体类对象")
     private T data;//响应数据
 
     //快速返回操作成功响应结果(带响应数据)

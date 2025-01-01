@@ -14,25 +14,21 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import javax.security.auth.login.LoginException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user/user")
+@Tag(name = "用户管理", description = "提供用户管理相关操作的API")
 @Validated
 public class UserController {
     @Autowired
@@ -139,4 +135,27 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "修改密码")
+    @PutMapping("/updatepassword")
+    public Result updatePassword(String newPassword,String oldPassword){
+        if (newPassword.equals(oldPassword)){
+            return Result.error("新旧密码不能一样");
+        }
+        if (newPassword.isEmpty() || oldPassword.isEmpty()){
+            return Result.error("密码不能为空");
+        }
+        //通过JWT获取用户ID
+        String token = ThreadLocalUtil.get();
+        Integer userId = JwtUtil.getIdFromToken(token);
+        User findUser = userService.findUserById(userId);
+        if (!PasswordUtil.verifyPassword(oldPassword,findUser.getPassword())){
+            return Result.error("密码错误");
+        }
+        findUser.setPassword(PasswordUtil.encryptPassword(newPassword));
+        Integer count = userService.updateUser(findUser);
+        if (count<1){
+            return Result.error("修改密码失败");
+        }
+        return Result.success("修改密码成功");
+    }
 }

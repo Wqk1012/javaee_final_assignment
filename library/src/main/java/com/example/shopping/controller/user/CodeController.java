@@ -5,6 +5,7 @@ import com.example.shopping.util.SendMail;
 import com.google.code.kaptcha.Producer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,11 +24,12 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/code")
+@Tag(name = "验证码接口", description = "提供验证码的API")
 public class CodeController {
     @Autowired
     private SendMail sendMail;
     @Autowired
-    private Producer captchaProducer; // 默认是DefaultKaptcha的实例
+    private Producer captchaProducer;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Operation(summary = "获取登录验证码")
@@ -56,6 +58,6 @@ public class CodeController {
         sendMail.sendSimpleMail(mail,"验证码",code);
         redisTemplate.opsForValue().set("emailcode",code,5, TimeUnit.MINUTES);
         System.out.println(redisTemplate.opsForValue().get("emailcode"));
-        return Result.success();
+        return Result.success("邮件发送成功请查收");
     }
 }

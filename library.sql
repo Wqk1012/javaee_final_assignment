@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50726
 File Encoding         : 65001
 
-Date: 2025-01-01 11:54:22
+Date: 2025-01-01 23:34:55
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,7 +24,7 @@ CREATE TABLE `author` (
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of author
@@ -48,7 +48,7 @@ CREATE TABLE `book` (
   PRIMARY KEY (`id`),
   KEY `author_id` (`author_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of book
@@ -77,16 +77,16 @@ CREATE TABLE `borrowrecord` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `book_id` (`book_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of borrowrecord
 -- ----------------------------
 INSERT INTO `borrowrecord` VALUES ('1', '2', '1', '2024-01-01', '2024-01-15');
-INSERT INTO `borrowrecord` VALUES ('2', '3', '2', '2024-01-03', '2024-12-31');
 INSERT INTO `borrowrecord` VALUES ('3', '4', '3', '2024-01-05', '2024-01-20');
 INSERT INTO `borrowrecord` VALUES ('4', '2', '4', '2024-01-10', null);
 INSERT INTO `borrowrecord` VALUES ('5', '3', '5', '2024-01-12', '2024-01-22');
+INSERT INTO `borrowrecord` VALUES ('6', '1', '8', '2024-01-01', '2024-01-15');
 
 -- ----------------------------
 -- Table structure for `category`
@@ -97,7 +97,7 @@ CREATE TABLE `category` (
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of category
@@ -120,7 +120,7 @@ CREATE TABLE `reservation` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `book_id` (`book_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of reservation
@@ -131,6 +131,7 @@ INSERT INTO `reservation` VALUES ('3', '4', '8', '2024-01-15');
 INSERT INTO `reservation` VALUES ('4', '2', '9', '2024-01-16');
 INSERT INTO `reservation` VALUES ('5', '3', '10', '2024-01-17');
 INSERT INTO `reservation` VALUES ('6', '4', '4', '2024-12-31');
+INSERT INTO `reservation` VALUES ('7', '1', '2', '2025-01-01');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -151,10 +152,9 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'admin', '$2a$10$IOccgkluZt4FhEYDu3c5YeluNrr5OSCbNog7rE6RerTM0bj2vkSaS', '/avatars/admin.jpg', 'admin@example.com', 'ADMIN');
+INSERT INTO `user` VALUES ('1', 'admin', '$2a$10$mDJGC7SA98E2jZ4nzka4R.1Wa6mns8i1aRYq4P19yVp7cHGwJ6moq', 'D:\\img\\f996427f-e863-4adb-997a-e93181a0587f.jpg', 'admin@example.com', 'ADMIN');
 INSERT INTO `user` VALUES ('2', 'zhangsan', 'password123', '/avatars/zhangsan.jpg', 'zhangsan@example.com', 'USER');
 INSERT INTO `user` VALUES ('3', 'lisi', 'password456', '/avatars/lisi.jpg', 'lisi@example.com', 'USER');
-INSERT INTO `user` VALUES ('4', 'wangwu', 'password789', '/avatars/wangwu.jpg', 'wangwu@example.com', 'USER');
+INSERT INTO `user` VALUES ('4', 'wangwu', '$2a$10$IOccgkluZt4FhEYDu3c5YeluNrr5OSCbNog7rE6RerTM0bj2vkSaS', '/avatars/wangwu.jpg', 'wangwu@example.com', 'USER');
 INSERT INTO `user` VALUES ('5', 'zhaoliu', 'password987', '/avatars/zhaoliu.jpg', 'zhaoliu@example.com', 'USER');
 INSERT INTO `user` VALUES ('6', 'tianqi', 'password654', '/avatars/tianqi.jpg', 'tianqi@example.com', 'USER');
-INSERT INTO `user` VALUES ('8', 'zzzz', '$2a$10$IOccgkluZt4FhEYDu3c5YeluNrr5OSCbNog7rE6RerTM0bj2vkSaS', 'D:\\img\\286660f0-83bb-42f2-88ec-1c26b0507556.jpg', '2472401292@qq.com', 'USER');

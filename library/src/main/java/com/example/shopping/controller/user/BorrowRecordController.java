@@ -32,7 +32,7 @@ public class BorrowRecordController {
     @PostMapping("/add")
     @Operation(summary = "增加借阅记录")
     public Result add(Integer bookId){
-        //获取用户id
+        //通过JWT获取用户ID
         String token = ThreadLocalUtil.get();
         Integer userId = JwtUtil.getIdFromToken(token);
         //判断图书是否存在
@@ -68,7 +68,7 @@ public class BorrowRecordController {
     @GetMapping("/findBorrowedBooksByUserId")
     @Operation(summary = "查询当前用户借阅的所有图书")
     public Result<List<Book>> findBorrowedBooksByUserId(){
-        //获取用户id
+        //通过JWT获取用户ID
         String token = ThreadLocalUtil.get();
         Integer userId = JwtUtil.getIdFromToken(token);
         List<Book> borrowedBooksByUserId = borrowRecordService.findBorrowedBooksByUserId(userId);
@@ -81,7 +81,7 @@ public class BorrowRecordController {
     @Operation(summary = "查询当前用户借阅图书数量")
     @GetMapping("/findUserBorrowedBooksCountByUserId")
     public Result<UserBorrowedBooksCount> findUserBorrowedBooksCountByUserId(){
-        //获取用户id
+        //通过JWT获取用户ID
         String token = ThreadLocalUtil.get();
         Integer userId = JwtUtil.getIdFromToken(token);
         UserBorrowedBooksCount user = borrowRecordService.findUserBorrowedBooksCountByUserId(userId);

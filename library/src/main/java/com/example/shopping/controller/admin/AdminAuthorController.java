@@ -18,6 +18,7 @@ public class AdminAuthorController {
     @PostMapping("/add")
     @Operation(summary = "新增作家")
     public Result add(Author author){
+        //判断作家是否存在
         String name = author.getName();
         Author authorByName = authorService.getAuthorByName(name);
         if (authorByName != null){
@@ -34,6 +35,7 @@ public class AdminAuthorController {
     @DeleteMapping("/delete")
     @Operation(summary = "删除作家")
     public Result delete(Integer authorId){
+        //判断作家是否存在
         Author authorById = authorService.getAuthorById(authorId);
         if (authorById == null){
             return Result.error("作家不存在");

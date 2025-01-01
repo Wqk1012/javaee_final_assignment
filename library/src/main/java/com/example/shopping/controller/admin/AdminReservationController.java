@@ -26,6 +26,7 @@ public class AdminReservationController {
     @GetMapping("/findByBookId")
     @Operation(summary = "查询指定图书的预约记录")
     public Result<List<Reservation>> findByBookId(Integer bookId){
+        //判断书籍是否存在
         Book bookById = bookService.findBookById(bookId);
         if (bookById == null){
             return Result.error("书籍不存在");
