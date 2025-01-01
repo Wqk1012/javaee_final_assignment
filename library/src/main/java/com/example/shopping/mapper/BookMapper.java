@@ -14,7 +14,6 @@ public interface BookMapper {
     Book findBookById(@Param("id") Integer id);//通过id查询图书详细信息（多表）
 
     //查询某一分类下的所有图书(多表)
-
     List<Book> findBooksByCategoryId(@Param("categoryId") Integer categoryId);
 
     // 根据 authorId 查询所有属于该作者的图书(多表)

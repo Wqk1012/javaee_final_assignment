@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shopping.mapper.AuthorMapper">
+
+    <!-- 插入作者 -->
+    <insert id="insertAuthor" parameterType="com.example.shopping.pojo.Author" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO author (name)
+        VALUES (#{name})
+    </insert>
+
+    <!-- 删除作者 -->
+    <delete id="deleteAuthorById" parameterType="int">
+        DELETE FROM author WHERE id = #{id}
+    </delete>
+
+    <!-- 更新作者 -->
+    <update id="updateAuthor" parameterType="com.example.shopping.pojo.Author">
+        UPDATE author
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据 ID 查询作者 -->
+    <select id="getAuthorById" parameterType="int" resultType="com.example.shopping.pojo.Author">
+        SELECT id, name
+        FROM author
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有作者 -->
+    <select id="getAllAuthors" resultType="com.example.shopping.pojo.Author">
+        SELECT id, name
+        FROM author
+    </select>
+
+    <!-- 根据名字查询作者 -->
+    <select id="getAuthorByName" parameterType="string" resultType="com.example.shopping.pojo.Author">
+        SELECT id, name
+        FROM author
+        WHERE name = #{name}
+    </select>
+</mapper>

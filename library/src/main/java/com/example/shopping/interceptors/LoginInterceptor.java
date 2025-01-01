@@ -49,6 +49,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         // 检查用户是否有权限访问当前 URI
         if (uri.startsWith("/admin/") && !"ADMIN".equals(userRole.toUpperCase())) {
+            //用户访问管理员端返回403 代表没有权限
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }

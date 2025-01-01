@@ -87,7 +87,7 @@ public class UserController {
     }
     @PostMapping("/upload")
     @Operation(
-            summary = "上传文件",
+            summary = "上传文件更新头像",
             description = "通过此接口上传文件",
             requestBody = @RequestBody(
                     description = "文件上传",

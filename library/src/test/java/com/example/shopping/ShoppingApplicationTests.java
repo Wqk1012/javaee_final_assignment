@@ -1,10 +1,7 @@
 package com.example.shopping;
 
 import com.example.shopping.controller.user.CodeController;
-import com.example.shopping.mapper.BookMapper;
-import com.example.shopping.mapper.BorrowRecordMapper;
-import com.example.shopping.mapper.ReservationMapper;
-import com.example.shopping.mapper.UserMapper;
+import com.example.shopping.mapper.*;
 import com.example.shopping.pojo.*;
 import com.example.shopping.util.JwtUtil;
 import com.example.shopping.util.PasswordUtil;
@@ -109,5 +106,20 @@ class ShoppingApplicationTests {
         System.out.println(JwtUtil.getRoleFromToken(jwtToken));
         System.out.println(JwtUtil.getUsernameFromToken(jwtToken));
         System.out.println(jwtToken);
+    }
+
+    @Autowired
+    CategoryMapper categoryMapper;
+    @Test
+    public void testCategory(){
+        categoryMapper.deleteCategoryById(6);
+    }
+
+    @Autowired
+    AuthorMapper authorMapper;
+    @Test
+    public void testAuthor(){
+        System.out.println(authorMapper.getAuthorById(2));
+        System.out.println(authorMapper.getAuthorByName("金庸"));
     }
 }
