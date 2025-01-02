@@ -51,3 +51,9 @@ springdoc:
     - group: '客户端'
       paths-to-match: '/**'
       packages-to-scan: com.example.shopping.controller.user
+#MinIO的配置
+minio:
+  endpoint: http://127.0.0.1:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: my-bucket

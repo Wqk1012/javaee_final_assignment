@@ -4,6 +4,7 @@ package com.example.shopping.controller.user;
 import com.example.shopping.mapper.UserMapper;
 import com.example.shopping.pojo.Result;
 import com.example.shopping.pojo.User;
+import com.example.shopping.service.MinioService;
 import com.example.shopping.service.UserService;
 import com.example.shopping.util.FileUploadUtil;
 import com.example.shopping.util.JwtUtil;
@@ -33,26 +34,33 @@ import java.util.concurrent.TimeUnit;
 public class UserController {
     @Autowired
     private UserService userService;
-    private static final String UPLOAD_DIR = "D:/img"; // 文件保存的根目录
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private MinioService minioService;
+
     @Operation(summary = "注册")
     @PostMapping("/register")
-    public Result register(@Validated @RequestBody User user,String emailCode){
+    public Result register(String userName,String passWord,String email,String emailCode){
         String code = redisTemplate.opsForValue().get("emailcode");
         if (!code.equals(emailCode)){
             return Result.error("邮箱验证码不正确");
         }
-        User findUser = userService.findUserByUserName(user.getUsername());
+        User findUser = userService.findUserByUserName(userName);
         if (findUser != null){
             return Result.error("用户名已存在");
         }
-        String password = user.getPassword();
-        user.setPassword(PasswordUtil.encryptPassword(password));
-        Integer num = userService.addUser(user);
+        User registerUser = new User();
+        registerUser.setRole("USER");
+        registerUser.setEmail(email);
+        registerUser.setUsername(userName);
+        registerUser.setPassword(PasswordUtil.encryptPassword(passWord));
+        Integer num = userService.addUser(registerUser);
         if (num<1){
             return Result.error("服务器错误，联系管理员");
         }
+        //注册后销毁验证码
+        redisTemplate.delete("emailcode");
         return Result.success("注册成功");
     }
 
@@ -79,6 +87,8 @@ public class UserController {
         String s = JwtUtil.generateToken(userByUserName);
         redisTemplate.opsForValue().set(s,s,1, TimeUnit.DAYS);
         System.out.println(redisTemplate.opsForValue().get(s));
+        //登录后销毁验证码
+        redisTemplate.delete("captcha");
         return Result.success(s);
     }
     @PostMapping("/upload")
@@ -100,7 +110,7 @@ public class UserController {
 
         try {
             // 使用工具类上传文件，返回文件存储路径
-            String filePath = FileUploadUtil.uploadFile(file);
+            String filePath = minioService.uploadFile(file);
 
             // 从 ThreadLocal 中获取当前用户的 Token
             String token = ThreadLocalUtil.get();
